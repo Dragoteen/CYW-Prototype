@@ -1,9 +1,9 @@
 const videoElement = document.getElementById('video');
 const resultSpan = document.querySelector('#result span');
-let codeReader;
+let codeReader = null;
 
 async function startScanner() {
-  // Nettoie d'abord si une instance existait
+  // Si déjà actif, on reset
   if (codeReader) {
     await codeReader.reset();
   }
@@ -11,26 +11,34 @@ async function startScanner() {
   codeReader = new ZXing.BrowserMultiFormatReader();
 
   try {
-    const devices = await ZXing.BrowserCodeReader.listVideoInputDevices();
-    const backCamera = devices.find(device => device.label.toLowerCase().includes('back')) || devices[0];
+    const videoInputDevices = await ZXing.BrowserCodeReader.listVideoInputDevices();
 
-    await codeReader.decodeFromVideoDevice(backCamera.deviceId, videoElement, (result, err) => {
+    if (videoInputDevices.length === 0) {
+      alert("Aucune caméra trouvée.");
+      return;
+    }
+
+    const preferredDevice = videoInputDevices.find(device =>
+      device.label.toLowerCase().includes('back')
+    ) || videoInputDevices[0];
+
+    // Lance le scanner
+    await codeReader.decodeFromVideoDevice(preferredDevice.deviceId, videoElement, (result, error) => {
       if (result) {
         resultSpan.textContent = result.text;
-        codeReader.reset(); // Stop scan après détection
+        codeReader.reset(); // Stop le scan
         showMedaillonInfo(result.text);
       }
     });
 
-  } catch (error) {
-    console.error('Erreur accès caméra ou scan :', error);
-    alert("Impossible d'accéder à la caméra.");
+  } catch (err) {
+    console.error("Erreur d'accès caméra :", err);
+    alert("Erreur : la caméra n'a pas pu être démarrée.");
   }
 }
 
 function showMedaillonInfo(code) {
-  // Ici tu peux connecter à ta Google Sheet ou afficher des infos personnalisées
-  console.log("QR détecté :", code);
+  document.getElementById("result").innerHTML = `Code scanné : <span>${code}</span>`;
 }
 
 document.getElementById("startBtn").addEventListener("click", startScanner);
