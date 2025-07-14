@@ -1,35 +1,31 @@
-const cameraInput = document.getElementById("cameraInput");
-const fileInput = document.getElementById("fileInput");
+import { BrowserQRCodeReader } from 'https://cdn.jsdelivr.net/npm/@zxing/browser@0.1.1/+esm';
+
+const qrReader = new BrowserQRCodeReader();
 const result = document.getElementById("result");
 
-// Fonction pour lire une image et essayer de décoder un QR code
-function handleFile(file) {
-  const reader = new FileReader();
-  reader.onload = function (e) {
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0);
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const code = jsQR(imageData.data, canvas.width, canvas.height);
-      if (code) {
-        result.textContent = "QR Code : " + code.data;
-      } else {
-        result.textContent = "❌ Aucun QR code détecté.";
-      }
-    };
-    img.src = e.target.result;
+const cameraInput = document.getElementById("cameraInput");
+const fileInput = document.getElementById("fileInput");
+
+async function decodeImageFromFile(file) {
+  const imgURL = URL.createObjectURL(file);
+  const img = new Image();
+  img.src = imgURL;
+
+  img.onload = async () => {
+    try {
+      const resultQR = await qrReader.decodeFromImageElement(img);
+      result.textContent = "QR Code : " + resultQR.text;
+    } catch (e) {
+      console.warn(e);
+      result.textContent = "❌ Aucun QR code détecté.";
+    }
   };
-  reader.readAsDataURL(file);
 }
 
 cameraInput.onchange = e => {
-  if (e.target.files[0]) handleFile(e.target.files[0]);
+  if (e.target.files[0]) decodeImageFromFile(e.target.files[0]);
 };
 
 fileInput.onchange = e => {
-  if (e.target.files[0]) handleFile(e.target.files[0]);
+  if (e.target.files[0]) decodeImageFromFile(e.target.files[0]);
 };
