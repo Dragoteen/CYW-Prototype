@@ -3,28 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scan QR Médaillon</title>
+  <title>Scanner QR Médaillon</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h2>Scan de QR Code Médaillon</h2>
+  <h2>Scan QR Code</h2>
 
-  <input type="file" accept="image/*" id="cameraInput" capture="environment" style="display: none">
-  <input type="file" accept="image/*" id="fileInput" style="display: none">
-  
+  <input type="file" accept="image/*" id="cameraInput" capture="environment" hidden>
+  <input type="file" accept="image/*" id="fileInput" hidden>
+
   <button onclick="document.getElementById('cameraInput').click()">📷 Prendre une photo</button>
-  <button onclick="document.getElementById('fileInput').click()">🖼️ Choisir dans la galerie</button>
+  <button onclick="document.getElementById('fileInput').click()">🖼️ Choisir une image</button>
 
-  <canvas id="canvas"></canvas>
-
-  <div class="point" id="p0"></div>
-  <div class="point" id="p1"></div>
-  <div class="point" id="p2"></div>
-  <div class="point" id="p3"></div>
+  <div style="position: relative; display: inline-block;">
+    <canvas id="canvas"></canvas>
+    <div class="point" id="p0"></div>
+    <div class="point" id="p1"></div>
+    <div class="point" id="p2"></div>
+    <div class="point" id="p3"></div>
+  </div>
 
   <button id="scanBtn">🔍 Scanner</button>
-
-  <div id="result">Aucun scan effectué.</div>
+  <div id="result">Aucun résultat.</div>
 
   <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
   <script src="script.js"></script>
