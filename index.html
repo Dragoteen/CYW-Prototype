@@ -1,40 +1,32 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Scan QR avec sélection manuelle</title>
-<style>
-  #canvas {
-    border: 1px solid #333;
-    max-width: 100%;
-    touch-action: none;
-    user-select: none;
-  }
-  .point {
-    position: absolute;
-    width: 20px; height: 20px;
-    background: #4CAF50;
-    border-radius: 50%;
-    margin: -10px 0 0 -10px;
-    touch-action: none;
-    cursor: grab;
-    z-index: 10;
-  }
-  #container {
-    position: relative;
-    display: inline-block;
-  }
-  #result {
-    margin-top: 10px;
-    font-weight: bold;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scan QR - Sélection manuelle</title>
+  <style>
+    #container {
+      position: relative;
+      display: inline-block;
+    }
+    #canvas {
+      border: 1px solid #000;
+      touch-action: none;
+    }
+    .point {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      border-radius: 50%;
+      margin: -10px 0 0 -10px;
+      touch-action: none;
+    }
+  </style>
 </head>
 <body>
 
-<h1>Scanner QR code avec sélection manuelle</h1>
-
+<h2>Scanner un QR code (image + sélection manuelle)</h2>
 <input type="file" id="inputImage" accept="image/*" />
 <div id="container">
   <canvas id="canvas"></canvas>
@@ -44,12 +36,11 @@
   <div id="p4" class="point"></div>
 </div>
 
-<button id="scanBtn">Scanner la zone sélectionnée</button>
+<br>
+<button id="scanBtn">Scanner la zone</button>
+<p id="result">Résultat : -</p>
 
-<div id="result">Résultat : -</div>
-
-<script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.min.js"></script>
 <script src="script.js"></script>
-
 </body>
 </html>
