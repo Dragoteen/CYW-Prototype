@@ -1,6 +1,7 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-const inputImage = document.getElementById("inputImage");
+const chooseInput = document.getElementById("chooseImage");
+const photoInput = document.getElementById("takePhoto");
 const result = document.getElementById("result");
 
 let img = new Image();
@@ -8,9 +9,9 @@ let imgLoaded = false;
 
 const points = [
   { x: 50, y: 50 },
-  { x: 200, y: 50 },
-  { x: 200, y: 200 },
-  { x: 50, y: 200 }
+  { x: 250, y: 50 },
+  { x: 250, y: 250 },
+  { x: 50, y: 250 }
 ];
 
 function drawCanvas() {
@@ -27,10 +28,11 @@ function drawCanvas() {
 }
 
 function updatePointElements() {
+  const rect = canvas.getBoundingClientRect();
   points.forEach((pt, i) => {
     const el = document.getElementById("p" + i);
-    el.style.left = pt.x + "px";
-    el.style.top = pt.y + "px";
+    el.style.left = (canvas.offsetLeft + pt.x) + "px";
+    el.style.top = (canvas.offsetTop + pt.y) + "px";
   });
 }
 
@@ -49,9 +51,7 @@ function resizeCanvasToImage() {
   updatePointElements();
 }
 
-inputImage.addEventListener("change", e => {
-  const file = e.target.files[0];
-  if (!file) return;
+function handleFile(file) {
   const url = URL.createObjectURL(file);
   img.onload = () => {
     imgLoaded = true;
@@ -59,23 +59,40 @@ inputImage.addEventListener("change", e => {
     URL.revokeObjectURL(url);
   };
   img.src = url;
+}
+
+chooseInput.addEventListener("change", e => {
+  if (e.target.files.length) handleFile(e.target.files[0]);
 });
 
+photoInput.addEventListener("change", e => {
+  if (e.target.files.length) handleFile(e.target.files[0]);
+});
+
+// Points déplaçables
 points.forEach((pt, i) => {
   const el = document.getElementById("p" + i);
+  let isDragging = false;
+
   el.addEventListener("pointerdown", e => {
     e.preventDefault();
-    function move(ev) {
+    isDragging = true;
+
+    const move = ev => {
+      if (!isDragging) return;
       const rect = canvas.getBoundingClientRect();
       pt.x = ev.clientX - rect.left;
       pt.y = ev.clientY - rect.top;
       drawCanvas();
       updatePointElements();
-    }
-    function up() {
+    };
+
+    const up = () => {
+      isDragging = false;
       document.removeEventListener("pointermove", move);
       document.removeEventListener("pointerup", up);
-    }
+    };
+
     document.addEventListener("pointermove", move);
     document.addEventListener("pointerup", up);
   });
