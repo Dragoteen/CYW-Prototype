@@ -13,17 +13,6 @@ document.getElementById("startScan").addEventListener("click", async () => {
 
   const html5QrCode = new Html5Qrcode("preview");
 
-  html5QrCode.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: 250 },
-    (decodedText) => {
-      html5QrCode.stop();
-      document.querySelector("#codeResult span").textContent = decodedText;
-      showMedaillonInfo(decodedText);
-    },
-    (errorMessage) => {}
-  );
-  
   document.getElementById("resetScan").addEventListener("click", async () => {
   await html5QrCode.stop();
   html5QrCode.start(
@@ -34,9 +23,8 @@ document.getElementById("startScan").addEventListener("click", async () => {
       document.querySelector("#codeResult span").textContent = decodedText;
       showMedaillonInfo(decodedText);
     },
-    () => {}
+    (errorMessage) => {}
   );
-});
 });
 
 function showMedaillonInfo(code) {
