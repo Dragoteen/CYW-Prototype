@@ -1,0 +1,25 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Scan Médaillon</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1>Scanner un médaillon</h1>
+  <video id="preview"></video>
+  <button id="startScan">📷 Lancer le scan</button>
+  <p id="codeResult">Code scanné : <span></span></p>
+
+  <div id="result">
+    <h2 id="nomMedaillon"></h2>
+    <p id="typeMedaillon"></p>
+    <img id="imageMedaillon" src="" alt="Image du médaillon" />
+  </div>
+
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <script src="script.js"></script>
+</body>
+</html>
