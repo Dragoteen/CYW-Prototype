@@ -5,9 +5,9 @@ const result = document.getElementById("result");
 
 const points = [
   { x: 50, y: 50 },
-  { x: 200, y: 50 },
-  { x: 200, y: 200 },
-  { x: 50, y: 200 }
+  { x: 250, y: 50 },
+  { x: 250, y: 250 },
+  { x: 50, y: 250 }
 ];
 
 let img = new Image();
@@ -18,29 +18,28 @@ fileInput.addEventListener("change", e => {
   if (!file) return;
 
   const reader = new FileReader();
-  reader.onload = function (event) {
+  reader.onload = function (ev) {
     img.onload = () => {
       const scale = 300 / img.width;
       canvas.width = img.width * scale;
       canvas.height = img.height * scale;
-
       ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
       imageLoaded = true;
 
-      // Initialiser les points
-      points[0] = { x: 50, y: 50 };
-      points[1] = { x: canvas.width - 50, y: 50 };
-      points[2] = { x: canvas.width - 50, y: canvas.height - 50 };
-      points[3] = { x: 50, y: canvas.height - 50 };
-      updateCanvas();
+      points[0] = { x: 10, y: 10 };
+      points[1] = { x: canvas.width - 10, y: 10 };
+      points[2] = { x: canvas.width - 10, y: canvas.height - 10 };
+      points[3] = { x: 10, y: canvas.height - 10 };
+
+      drawOverlay();
       updatePoints();
     };
-    img.src = event.target.result;
+    img.src = ev.target.result;
   };
   reader.readAsDataURL(file);
 });
 
-function updateCanvas() {
+function drawOverlay() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
@@ -64,29 +63,25 @@ function updatePoints() {
   });
 }
 
-// Gérer déplacement des boules
 points.forEach((pt, i) => {
   const el = document.getElementById("p" + i);
-  let isDragging = false;
+  let dragging = false;
 
   el.addEventListener("pointerdown", e => {
-    isDragging = true;
-
+    dragging = true;
     const move = ev => {
-      if (!isDragging) return;
+      if (!dragging) return;
       const rect = canvas.getBoundingClientRect();
       pt.x = ev.clientX - rect.left;
       pt.y = ev.clientY - rect.top;
-      updateCanvas();
+      drawOverlay();
       updatePoints();
     };
-
     const up = () => {
-      isDragging = false;
+      dragging = false;
       document.removeEventListener("pointermove", move);
       document.removeEventListener("pointerup", up);
     };
-
     document.addEventListener("pointermove", move);
     document.addEventListener("pointerup", up);
   });
