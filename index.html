@@ -3,55 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Scan Médaillon</title>
+  <title>Scanner Médaillon QR Code</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      margin: 1em;
       text-align: center;
-      padding: 20px;
     }
-    .button {
-      margin: 10px;
-      padding: 12px 20px;
-      font-size: 16px;
-      background-color: #0077ff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
+    #canvas {
+      max-width: 100%;
+      border: 1px solid #ccc;
+      margin-top: 1em;
+      display: none;
     }
-    .button:hover {
-      background-color: #005ad1;
-    }
-    #result {
-      margin-top: 20px;
-      font-size: 1.2em;
+    #message {
+      margin-top: 1em;
       font-weight: bold;
     }
-    canvas {
-      max-width: 100%;
-      margin-top: 20px;
-      display: none;
+    button {
+      margin: 0.5em;
+      padding: 0.7em 1.5em;
+      font-size: 1em;
     }
   </style>
 </head>
 <body>
-  <h1>Scanner un Médaillon</h1>
 
-  <!-- Entrées photo et galerie -->
-  <input type="file" accept="image/*" id="cameraInput" style="display: none" />
-  <input type="file" accept="image/*" id="fileInput" style="display: none" />
+  <h1>Scanner Médaillon QR Code</h1>
 
-  <!-- Boutons -->
-  <button class="button" onclick="document.getElementById('cameraInput').click()">📷 Prendre une photo</button>
-  <button class="button" onclick="document.getElementById('fileInput').click()">🖼️ Sélectionner une image</button>
+  <button id="btn-take-photo">Prendre une photo</button>
+  <button id="btn-select-photo">Choisir une photo</button>
 
-  <!-- Résultat -->
-  <div id="result">Aucun QR code scanné</div>
+  <input type="file" accept="image/*" capture="environment" id="input-take-photo" style="display:none" />
+  <input type="file" accept="image/*" id="input-select-photo" style="display:none" />
 
-  <!-- Canvas (invisible par défaut) -->
   <canvas id="canvas"></canvas>
 
-  <script type="module" src="script.js"></script>
+  <div id="message">Aucun QR code détecté.</div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.19.1/umd/index.min.js"></script>
+  <script src="script.js"></script>
+
 </body>
 </html>
