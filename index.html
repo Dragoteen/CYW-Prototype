@@ -2,38 +2,31 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Scan QR - Manuel</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body { text-align: center; font-family: sans-serif; }
-    canvas { border: 1px solid #000; margin-top: 10px; touch-action: none; }
-    .point {
-      width: 20px; height: 20px;
-      background: red; border-radius: 50%;
-      position: absolute; margin: -10px 0 0 -10px;
-      touch-action: none;
-    }
-    #container { position: relative; display: inline-block; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Scan QR Médaillon</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <h2>Scan de QR Code Médaillon</h2>
 
-<h2>Scanner un QR Code</h2>
-<input type="file" id="fileInput" accept="image/*"><br><br>
+  <input type="file" accept="image/*" id="cameraInput" capture="environment" style="display: none">
+  <input type="file" accept="image/*" id="fileInput" style="display: none">
+  
+  <button onclick="document.getElementById('cameraInput').click()">📷 Prendre une photo</button>
+  <button onclick="document.getElementById('fileInput').click()">🖼️ Choisir dans la galerie</button>
 
-<div id="container">
   <canvas id="canvas"></canvas>
+
   <div class="point" id="p0"></div>
   <div class="point" id="p1"></div>
   <div class="point" id="p2"></div>
   <div class="point" id="p3"></div>
-</div><br><br>
 
-<button id="scanBtn">🔍 Scanner</button>
-<p id="result">Résultat : -</p>
+  <button id="scanBtn">🔍 Scanner</button>
 
-<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
-<script src="script.js"></script>
+  <div id="result">Aucun scan effectué.</div>
 
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
