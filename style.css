@@ -1,19 +1,30 @@
-
 body {
-  font-family: Arial, sans-serif;
+  font-family: sans-serif;
   text-align: center;
-  padding: 20px;
+  background: #f4f4f4;
+  padding: 10px;
 }
-#preview {
-  width: 300px;
-  margin: 10px auto;
+
+canvas {
   border: 1px solid #ccc;
-}
-#result {
-  margin-top: 20px;
-  display: none;
-}
-#imageMedaillon {
-  max-width: 200px;
   margin-top: 10px;
+  max-width: 100%;
+  touch-action: none;
+}
+
+.point {
+  width: 15px;
+  height: 15px;
+  background: red;
+  border-radius: 50%;
+  position: absolute;
+  touch-action: none;
+  z-index: 10;
+}
+
+button {
+  margin: 5px;
+  padding: 8px 12px;
+  font-size: 16px;
+  cursor: pointer;
 }
