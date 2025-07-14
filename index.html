@@ -1,16 +1,15 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CYW - ZXing Scanner</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CYW - ZXing Scanner Simple</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
       padding: 20px;
     }
-
     video {
       width: 100%;
       max-width: 400px;
@@ -18,33 +17,29 @@
       border-radius: 8px;
       margin-bottom: 10px;
     }
-
     button {
       padding: 10px 20px;
       font-size: 16px;
       margin: 5px;
       cursor: pointer;
     }
-
     #result {
       margin-top: 20px;
       font-size: 18px;
       font-weight: bold;
+      word-break: break-all;
     }
   </style>
 </head>
 <body>
-
   <h1>CYW - Scanner de Médaillon</h1>
   <video id="video" autoplay muted playsinline></video>
-  <br>
+  <br />
   <button id="startBtn">📷 Lancer le scan</button>
   <button id="resetBtn">🔁 Relancer le scan</button>
-  <a href="test-video.html">test video</a>
 
   <div id="result">Code scanné : <span>-</span></div>
 
-  <!-- ZXing CDN -->
   <script src="https://unpkg.com/@zxing/browser@latest"></script>
   <script src="script.js"></script>
 </body>
