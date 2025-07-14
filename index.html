@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Scan Médaillon</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       text-align: center;
       padding: 20px;
-    }
-    #result {
-      margin-top: 20px;
-      font-size: 1.2em;
-      font-weight: bold;
-      color: #333;
     }
     .button {
       margin: 10px;
@@ -29,25 +23,34 @@
     .button:hover {
       background-color: #005ad1;
     }
+    #result {
+      margin-top: 20px;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
     canvas {
       max-width: 100%;
       margin-top: 20px;
+      display: none;
     }
   </style>
 </head>
 <body>
-
   <h1>Scanner un Médaillon</h1>
 
-  <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display: none;">
-  <input type="file" accept="image/*" id="fileInput" style="display: none;">
+  <!-- Entrées photo et galerie -->
+  <input type="file" accept="image/*" id="cameraInput" style="display: none" />
+  <input type="file" accept="image/*" id="fileInput" style="display: none" />
 
+  <!-- Boutons -->
   <button class="button" onclick="document.getElementById('cameraInput').click()">📷 Prendre une photo</button>
   <button class="button" onclick="document.getElementById('fileInput').click()">🖼️ Sélectionner une image</button>
 
+  <!-- Résultat -->
   <div id="result">Aucun QR code scanné</div>
 
-  <canvas id="canvas" style="display:none;"></canvas>
+  <!-- Canvas (invisible par défaut) -->
+  <canvas id="canvas"></canvas>
 
   <script type="module" src="script.js"></script>
 </body>
