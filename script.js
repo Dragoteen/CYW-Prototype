@@ -5,31 +5,26 @@ const fileInput = document.getElementById("fileInput");
 const result = document.getElementById("result");
 
 let points = [
-  { x: 10, y: 10 },
-  { x: 290, y: 10 },
-  { x: 290, y: 290 },
-  { x: 10, y: 290 }
+  { x: 50, y: 50 },
+  { x: 250, y: 50 },
+  { x: 250, y: 250 },
+  { x: 50, y: 250 }
 ];
 
 let img = new Image();
 let imageLoaded = false;
 
+// Chargement de l'image
 function loadImage(file) {
   const reader = new FileReader();
   reader.onload = function (e) {
     img.onload = () => {
-      const scale = 300 / img.width;
-      canvas.width = img.width * scale;
-      canvas.height = img.height * scale;
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-      points = [
-        { x: 10, y: 10 },
-        { x: canvas.width - 10, y: 10 },
-        { x: canvas.width - 10, y: canvas.height - 10 },
-        { x: 10, y: canvas.height - 10 }
-      ];
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.drawImage(img, 0, 0);
+      resetPoints();
       drawOverlay();
-      updatePoints();
+      updatePointPositions();
       imageLoaded = true;
     };
     img.src = e.target.result;
@@ -37,27 +32,38 @@ function loadImage(file) {
   reader.readAsDataURL(file);
 }
 
-cameraInput.addEventListener("change", e => {
+cameraInput.onchange = e => {
   if (e.target.files[0]) loadImage(e.target.files[0]);
-});
+};
 
-fileInput.addEventListener("change", e => {
+fileInput.onchange = e => {
   if (e.target.files[0]) loadImage(e.target.files[0]);
-});
+};
 
 function drawOverlay() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  ctx.drawImage(img, 0, 0);
   ctx.strokeStyle = "blue";
   ctx.lineWidth = 2;
   ctx.beginPath();
   ctx.moveTo(points[0].x, points[0].y);
-  for (let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+  for (let i = 1; i < points.length; i++) {
+    ctx.lineTo(points[i].x, points[i].y);
+  }
   ctx.closePath();
   ctx.stroke();
 }
 
-function updatePoints() {
+function resetPoints() {
+  points = [
+    { x: 50, y: 50 },
+    { x: canvas.width - 50, y: 50 },
+    { x: canvas.width - 50, y: canvas.height - 50 },
+    { x: 50, y: canvas.height - 50 }
+  ];
+}
+
+function updatePointPositions() {
   const rect = canvas.getBoundingClientRect();
   points.forEach((p, i) => {
     const el = document.getElementById("p" + i);
@@ -66,50 +72,49 @@ function updatePoints() {
   });
 }
 
-points.forEach((pt, i) => {
+// Gérer le déplacement tactile ou souris
+points.forEach((p, i) => {
   const el = document.getElementById("p" + i);
   let dragging = false;
 
   const start = e => {
     dragging = true;
     e.preventDefault();
-
-    const move = ev => {
-      if (!dragging) return;
-      const touch = ev.touches ? ev.touches[0] : ev;
-      const rect = canvas.getBoundingClientRect();
-      pt.x = touch.clientX - rect.left;
-      pt.y = touch.clientY - rect.top;
-      drawOverlay();
-      updatePoints();
-    };
-
-    const end = () => {
-      dragging = false;
-      document.removeEventListener("mousemove", move);
-      document.removeEventListener("mouseup", end);
-      document.removeEventListener("touchmove", move);
-      document.removeEventListener("touchend", end);
-    };
-
     document.addEventListener("mousemove", move);
     document.addEventListener("mouseup", end);
     document.addEventListener("touchmove", move, { passive: false });
     document.addEventListener("touchend", end);
   };
 
+  const move = e => {
+    if (!dragging) return;
+    const evt = e.touches ? e.touches[0] : e;
+    const rect = canvas.getBoundingClientRect();
+    p.x = evt.clientX - rect.left;
+    p.y = evt.clientY - rect.top;
+    drawOverlay();
+    updatePointPositions();
+  };
+
+  const end = () => {
+    dragging = false;
+    document.removeEventListener("mousemove", move);
+    document.removeEventListener("mouseup", end);
+    document.removeEventListener("touchmove", move);
+    document.removeEventListener("touchend", end);
+  };
+
   el.addEventListener("mousedown", start);
   el.addEventListener("touchstart", start, { passive: false });
 });
 
-document.getElementById("scanBtn").addEventListener("click", () => {
-  if (!imageLoaded) return;
+document.getElementById("scanBtn").onclick = () => {
+  if (!imageLoaded) return alert("Aucune image chargée.");
 
   const minX = Math.min(...points.map(p => p.x));
   const minY = Math.min(...points.map(p => p.y));
   const maxX = Math.max(...points.map(p => p.x));
   const maxY = Math.max(...points.map(p => p.y));
-
   const width = maxX - minX;
   const height = maxY - minY;
 
@@ -117,26 +122,8 @@ document.getElementById("scanBtn").addEventListener("click", () => {
   const code = jsQR(imageData.data, width, height);
 
   if (code) {
-    result.textContent = "QR trouvé : " + code.data;
-    sendToGoogleSheet(code.data);
+    result.textContent = "QR détecté : " + code.data;
   } else {
-    result.textContent = "QR non détecté.";
+    result.textContent = "❌ Aucun QR code trouvé.";
   }
-});
-
-// 🔗 Envoie vers Google Sheets (via Web App déployée)
-function sendToGoogleSheet(qrData) {
-  const url =
-    "https://script.google.com/macros/s/https://api.sheety.co/d7cbcb1c41ac163fbaff577fe727b2bd/collectionYoKaiWatch [jp]Médaillons/medaillons/exec?code=" +
-    encodeURIComponent(qrData);
-
-  fetch(url)
-    .then(r => r.json())
-    .then(data => {
-      result.textContent += "\n🔎 Médaillon : " + data.nom || "Introuvable";
-    })
-    .catch(err => {
-      console.error(err);
-      result.textContent += "\n❌ Erreur API";
-    });
-}
+};
