@@ -3,38 +3,39 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Scan QR Code - Zone manuelle</title>
+  <title>Scan QR Code - Sélection manuelle</title>
   <style>
-    body { font-family: sans-serif; text-align: center; }
+    body { font-family: sans-serif; text-align: center; padding: 1rem; }
     #container { position: relative; display: inline-block; }
-    #canvas { border: 1px solid black; touch-action: none; }
+    #canvas { border: 1px solid #000; touch-action: none; max-width: 100%; }
     .point {
       position: absolute;
       width: 20px;
       height: 20px;
-      background: red;
+      background-color: red;
       border-radius: 50%;
       margin: -10px 0 0 -10px;
       touch-action: none;
     }
+    button, input { font-size: 1rem; margin: 10px; padding: 0.5rem 1rem; }
+    #result { margin-top: 1rem; font-weight: bold; }
   </style>
 </head>
 <body>
 
-<h2>Scan manuel QR Code</h2>
-<input type="file" id="inputImage" accept="image/*"><br><br>
+<h2>Scanner un QR Code manuellement</h2>
+<input type="file" id="inputImage" accept="image/*"><br>
 <div id="container">
   <canvas id="canvas"></canvas>
   <div class="point" id="p0"></div>
   <div class="point" id="p1"></div>
   <div class="point" id="p2"></div>
   <div class="point" id="p3"></div>
-</div><br><br>
-
+</div><br>
 <button id="scanBtn">Scanner la zone</button>
 <p id="result">Résultat : -</p>
 
-<script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
