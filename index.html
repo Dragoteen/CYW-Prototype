@@ -3,16 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Scan QR - Sélection manuelle</title>
+  <title>Scan QR Code - Zone manuelle</title>
   <style>
-    #container {
-      position: relative;
-      display: inline-block;
-    }
-    #canvas {
-      border: 1px solid #000;
-      touch-action: none;
-    }
+    body { font-family: sans-serif; text-align: center; }
+    #container { position: relative; display: inline-block; }
+    #canvas { border: 1px solid black; touch-action: none; }
     .point {
       position: absolute;
       width: 20px;
@@ -26,17 +21,16 @@
 </head>
 <body>
 
-<h2>Scanner un QR code (image + sélection manuelle)</h2>
-<input type="file" id="inputImage" accept="image/*" />
+<h2>Scan manuel QR Code</h2>
+<input type="file" id="inputImage" accept="image/*"><br><br>
 <div id="container">
   <canvas id="canvas"></canvas>
-  <div id="p1" class="point"></div>
-  <div id="p2" class="point"></div>
-  <div id="p3" class="point"></div>
-  <div id="p4" class="point"></div>
-</div>
+  <div class="point" id="p0"></div>
+  <div class="point" id="p1"></div>
+  <div class="point" id="p2"></div>
+  <div class="point" id="p3"></div>
+</div><br><br>
 
-<br>
 <button id="scanBtn">Scanner la zone</button>
 <p id="result">Résultat : -</p>
 
