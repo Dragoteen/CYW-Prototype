@@ -1,47 +1,37 @@
-let html5QrCode;
+const videoElement = document.getElementById('video');
+const resultSpan = document.querySelector('#result span');
+let codeReader;
 
 async function startScanner() {
-  const previewElement = document.getElementById("preview");
-
-  // Si une instance existe déjà, l'arrêter
-  if (html5QrCode) {
-    await html5QrCode.stop();
-    html5QrCode.clear();
+  // Nettoie d'abord si une instance existait
+  if (codeReader) {
+    await codeReader.reset();
   }
 
-  html5QrCode = new Html5Qrcode("preview");
+  codeReader = new ZXing.BrowserMultiFormatReader();
 
   try {
-    await html5QrCode.start(
-      { facingMode: "environment" },
-      {
-        fps: 10,
-        qrbox: 250,
-        experimentalFeatures: {
-          useBarCodeDetectorIfSupported: true
-        }
-      },
-      (decodedText) => {
-        html5QrCode.stop();
-        document.querySelector("#codeResult span").textContent = decodedText;
-        showMedaillonInfo(decodedText);
-      },
-      (errorMessage) => {
-        // On ignore les erreurs momentanées de scan
+    const devices = await ZXing.BrowserCodeReader.listVideoInputDevices();
+    const backCamera = devices.find(device => device.label.toLowerCase().includes('back')) || devices[0];
+
+    await codeReader.decodeFromVideoDevice(backCamera.deviceId, videoElement, (result, err) => {
+      if (result) {
+        resultSpan.textContent = result.text;
+        codeReader.reset(); // Stop scan après détection
+        showMedaillonInfo(result.text);
       }
-    );
-  } catch (err) {
-    console.error("Erreur lors du démarrage du scanner :", err);
+    });
+
+  } catch (error) {
+    console.error('Erreur accès caméra ou scan :', error);
+    alert("Impossible d'accéder à la caméra.");
   }
 }
 
 function showMedaillonInfo(code) {
-  // Pour l’instant, juste un exemple de sortie
-  document.getElementById("medaillonInfo").innerHTML = `
-    <p><strong>Médaillon trouvé :</strong> ${code}</p>
-    <!-- Ici tu peux ajouter une requête vers Google Sheets ou une base de données -->
-  `;
+  // Ici tu peux connecter à ta Google Sheet ou afficher des infos personnalisées
+  console.log("QR détecté :", code);
 }
 
-document.getElementById("startScan").addEventListener("click", startScanner);
-document.getElementById("resetScan").addEventListener("click", startScanner);
+document.getElementById("startBtn").addEventListener("click", startScanner);
+document.getElementById("resetBtn").addEventListener("click", startScanner);
