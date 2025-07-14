@@ -23,6 +23,20 @@ document.getElementById("startScan").addEventListener("click", async () => {
     },
     (errorMessage) => {}
   );
+  
+  document.getElementById("resetScan").addEventListener("click", async () => {
+  await html5QrCode.stop();
+  html5QrCode.start(
+    { facingMode: "environment" },
+    { fps: 10, qrbox: 250 },
+    (decodedText) => {
+      html5QrCode.stop();
+      document.querySelector("#codeResult span").textContent = decodedText;
+      showMedaillonInfo(decodedText);
+    },
+    () => {}
+  );
+});
 });
 
 function showMedaillonInfo(code) {
