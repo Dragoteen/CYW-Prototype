@@ -1,52 +1,41 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Scan QR Code - Sélection manuelle</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scan QR avec sélection manuelle</title>
   <style>
     body { font-family: sans-serif; text-align: center; padding: 1rem; }
-    #container { position: relative; display: inline-block; }
-    #canvas { border: 1px solid #000; touch-action: none; max-width: 100%; height: auto; }
+    canvas { border: 1px solid black; max-width: 100%; height: auto; }
     .point {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      background-color: red;
-      border-radius: 50%;
-      margin: -10px 0 0 -10px;
+      width: 20px; height: 20px;
+      background-color: red; border-radius: 50%;
+      position: absolute; margin: -10px 0 0 -10px;
       touch-action: none;
-      z-index: 10;
     }
-    button, input { font-size: 1rem; margin: 10px; padding: 0.5rem 1rem; }
+    #container { position: relative; display: inline-block; }
     #result { margin-top: 1rem; font-weight: bold; }
-    #fileInputs { margin-bottom: 1rem; }
   </style>
 </head>
 <body>
 
 <h2>Scanner un QR Code manuellement</h2>
 
-<div id="fileInputs">
-  <input type="file" id="takePhoto" accept="image/*" capture="environment" style="display:none">
-  <button onclick="document.getElementById('takePhoto').click()">📷 Prendre une photo</button>
-
-  <input type="file" id="chooseImage" accept="image/*" style="display:none">
-  <button onclick="document.getElementById('chooseImage').click()">🖼️ Choisir une image</button>
-</div>
+<input type="file" accept="image/*" id="fileInput"><br><br>
 
 <div id="container">
   <canvas id="canvas"></canvas>
-  <div class="point" id="p0"></div>
-  <div class="point" id="p1"></div>
-  <div class="point" id="p2"></div>
-  <div class="point" id="p3"></div>
+  <div id="p0" class="point"></div>
+  <div id="p1" class="point"></div>
+  <div id="p2" class="point"></div>
+  <div id="p3" class="point"></div>
 </div><br>
 
-<button id="scanBtn">🔍 Scanner la zone</button>
+<button id="scanBtn">🔍 Scanner</button>
 <p id="result">Résultat : -</p>
 
 <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
 <script src="script.js"></script>
+
 </body>
 </html>
