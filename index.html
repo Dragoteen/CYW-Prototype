@@ -1,46 +1,55 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>CYW - ZXing Scanner Simple</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
-    }
-    video {
-      width: 100%;
-      max-width: 400px;
-      border: 2px solid #ccc;
-      border-radius: 8px;
-      margin-bottom: 10px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin: 5px;
-      cursor: pointer;
-    }
-    #result {
-      margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
-      word-break: break-all;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Scan QR avec sélection manuelle</title>
+<style>
+  #canvas {
+    border: 1px solid #333;
+    max-width: 100%;
+    touch-action: none;
+    user-select: none;
+  }
+  .point {
+    position: absolute;
+    width: 20px; height: 20px;
+    background: #4CAF50;
+    border-radius: 50%;
+    margin: -10px 0 0 -10px;
+    touch-action: none;
+    cursor: grab;
+    z-index: 10;
+  }
+  #container {
+    position: relative;
+    display: inline-block;
+  }
+  #result {
+    margin-top: 10px;
+    font-weight: bold;
+  }
+</style>
 </head>
 <body>
-  <h1>CYW - Scanner de Médaillon</h1>
-  <video id="video" autoplay muted playsinline></video>
-  <br />
-  <button id="startBtn">📷 Lancer le scan</button>
-  <button id="resetBtn">🔁 Relancer le scan</button>
 
-  <div id="result">Code scanné : <span>-</span></div>
+<h1>Scanner QR code avec sélection manuelle</h1>
 
-  <script src="https://unpkg.com/@zxing/browser@latest"></script>
-  <script src="script.js"></script>
+<input type="file" id="inputImage" accept="image/*" />
+<div id="container">
+  <canvas id="canvas"></canvas>
+  <div id="p1" class="point"></div>
+  <div id="p2" class="point"></div>
+  <div id="p3" class="point"></div>
+  <div id="p4" class="point"></div>
+</div>
+
+<button id="scanBtn">Scanner la zone sélectionnée</button>
+
+<div id="result">Résultat : -</div>
+
+<script src="https://cdn.jsdelivr.net/npm/jsqr/dist/jsQR.js"></script>
+<script src="script.js"></script>
+
 </body>
 </html>
