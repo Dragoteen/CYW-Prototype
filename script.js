@@ -15,7 +15,8 @@ document.getElementById("startScan").addEventListener("click", async () => {
 
   html5QrCode.start(
     { facingMode: "environment" },
-    { fps: 10, qrbox: 250 },
+    { fps: 10, qrbox: 250, experimentalFeatures: {
+      useBarCodeDetectorIfSupported: true} },
     (decodedText) => {
       html5QrCode.stop();
       document.querySelector("#codeResult span").textContent = decodedText;
