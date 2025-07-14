@@ -1,4 +1,3 @@
-
 const SHEET_URL = "https://api.sheety.co/d7cbcb1c41ac163fbaff577fe727b2bd/collectionYoKaiWatch [jp]Médaillons/medaillons";
 
 let database = [];
@@ -15,8 +14,7 @@ document.getElementById("startScan").addEventListener("click", async () => {
 
   html5QrCode.start(
     { facingMode: "environment" },
-    { fps: 10, qrbox: 250, experimentalFeatures: {
-      useBarCodeDetectorIfSupported: true} },
+    { fps: 10, qrbox: 250 },
     (decodedText) => {
       html5QrCode.stop();
       document.querySelector("#codeResult span").textContent = decodedText;
