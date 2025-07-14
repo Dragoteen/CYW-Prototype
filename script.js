@@ -2,11 +2,11 @@ import { BrowserQRCodeReader } from 'https://cdn.jsdelivr.net/npm/@zxing/browser
 
 const qrReader = new BrowserQRCodeReader();
 const result = document.getElementById("result");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
 const cameraInput = document.getElementById("cameraInput");
 const fileInput = document.getElementById("fileInput");
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
 
 function decodeImageWithCanvas(file) {
   const reader = new FileReader();
@@ -16,37 +16,41 @@ function decodeImageWithCanvas(file) {
     img.src = e.target.result;
 
     img.onload = async () => {
-      // Ajuster la taille du canvas à l’image
-      canvas.width = img.width;
-      canvas.height = img.height;
+      // Redimensionnement automatique (max 1024px)
+      const MAX_WIDTH = 1024;
+      const scale = Math.min(1, MAX_WIDTH / img.width);
+      canvas.width = img.width * scale;
+      canvas.height = img.height * scale;
+
+      // Afficher le canvas pour debug
       canvas.style.display = 'block';
 
-      ctx.drawImage(img, 0, 0);
+      // Dessiner image redimensionnée
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
       try {
         const resultQR = await qrReader.decodeFromCanvas(canvas);
-        result.textContent = "✅ QR Code : " + resultQR.text;
+        result.textContent = "✅ QR Code détecté : " + resultQR.text;
         console.log("QR détecté :", resultQR.text);
       } catch (err) {
-        console.warn("QR non détecté :", err);
+        console.warn("Aucun QR code détecté :", err);
         result.textContent = "❌ Aucun QR code détecté.";
       }
     };
 
     img.onerror = () => {
-      console.error("Erreur lors du chargement de l'image");
       result.textContent = "❌ Erreur de chargement de l'image.";
     };
   };
 
   reader.onerror = () => {
-    console.error("Erreur de lecture du fichier");
     result.textContent = "❌ Erreur de lecture du fichier.";
   };
 
   reader.readAsDataURL(file);
 }
 
+// Événements
 cameraInput.onchange = (e) => {
   if (e.target.files[0]) decodeImageWithCanvas(e.target.files[0]);
 };
