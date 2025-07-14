@@ -13,8 +13,6 @@ document.getElementById("startScan").addEventListener("click", async () => {
 
   const html5QrCode = new Html5Qrcode("preview");
 
-  document.getElementById("resetScan").addEventListener("click", async () => {
-  await html5QrCode.stop();
   html5QrCode.start(
     { facingMode: "environment" },
     { fps: 10, qrbox: 250 },
