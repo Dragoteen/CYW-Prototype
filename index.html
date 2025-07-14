@@ -2,22 +2,53 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Scan QR Code avec ZXing</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Scan Médaillon</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 1.2em;
+      font-weight: bold;
+      color: #333;
+    }
+    .button {
+      margin: 10px;
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #0077ff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .button:hover {
+      background-color: #005ad1;
+    }
+    canvas {
+      max-width: 100%;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h2>Scan QR Code</h2>
 
-  <input type="file" accept="image/*" id="cameraInput" capture="environment" hidden>
-  <input type="file" accept="image/*" id="fileInput" hidden>
+  <h1>Scanner un Médaillon</h1>
 
-  <button onclick="document.getElementById('cameraInput').click()">📷 Prendre une photo</button>
-  <button onclick="document.getElementById('fileInput').click()">🖼️ Choisir une image</button>
+  <input type="file" accept="image/*" capture="environment" id="cameraInput" style="display: none;">
+  <input type="file" accept="image/*" id="fileInput" style="display: none;">
 
-  <p id="result">QR Code non détecté.</p>
+  <button class="button" onclick="document.getElementById('cameraInput').click()">📷 Prendre une photo</button>
+  <button class="button" onclick="document.getElementById('fileInput').click()">🖼️ Sélectionner une image</button>
 
-  <!-- ZXing library -->
+  <div id="result">Aucun QR code scanné</div>
+
+  <canvas id="canvas" style="display:none;"></canvas>
+
   <script type="module" src="script.js"></script>
 </body>
 </html>
