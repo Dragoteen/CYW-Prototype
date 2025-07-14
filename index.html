@@ -1,48 +1,125 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Scanner Médaillon QR Code</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 1em;
-      text-align: center;
-    }
-    #canvas {
-      max-width: 100%;
-      border: 1px solid #ccc;
-      margin-top: 1em;
-      display: none;
-    }
-    #message {
-      margin-top: 1em;
-      font-weight: bold;
-    }
-    button {
-      margin: 0.5em;
-      padding: 0.7em 1.5em;
-      font-size: 1em;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Scanner Médaillon QR Code</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    padding: 1em;
+    text-align: center;
+  }
+  #canvas {
+    margin-top: 1em;
+    border: 1px solid #ccc;
+    max-width: 100%;
+    display: none;
+  }
+  #message {
+    margin-top: 1em;
+    font-weight: bold;
+  }
+  button {
+    margin: 0.5em;
+    padding: 0.7em 1.5em;
+    font-size: 1em;
+  }
+</style>
 </head>
 <body>
 
-  <h1>Scanner Médaillon QR Code</h1>
+<h1>Scanner Médaillon QR Code</h1>
 
-  <button id="btn-take-photo">Prendre une photo</button>
-  <button id="btn-select-photo">Choisir une photo</button>
+<button id="btn-take-photo">Prendre une photo</button>
+<button id="btn-select-photo">Choisir une photo</button>
 
-  <input type="file" accept="image/*" capture="environment" id="input-take-photo" style="display:none" />
-  <input type="file" accept="image/*" id="input-select-photo" style="display:none" />
+<input type="file" accept="image/*" capture="environment" id="input-take-photo" style="display:none" />
+<input type="file" accept="image/*" id="input-select-photo" style="display:none" />
 
-  <canvas id="canvas"></canvas>
+<canvas id="canvas"></canvas>
+<div id="message">Aucun QR code détecté.</div>
 
-  <div id="message">Aucun QR code détecté.</div>
+<script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.19.1/umd/index.min.js"></script>
+<script>
+  const btnTakePhoto = document.getElementById('btn-take-photo');
+  const btnSelectPhoto = document.getElementById('btn-select-photo');
+  const inputTakePhoto = document.getElementById('input-take-photo');
+  const inputSelectPhoto = document.getElementById('input-select-photo');
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  const message = document.getElementById('message');
 
-  <script src="https://cdn.jsdelivr.net/npm/@zxing/library@0.19.1/umd/index.min.js"></script>
-  <script src="script.js"></script>
+  btnTakePhoto.addEventListener('click', () => {
+    inputTakePhoto.value = '';
+    inputTakePhoto.click();
+  });
+
+  btnSelectPhoto.addEventListener('click', () => {
+    inputSelectPhoto.value = '';
+    inputSelectPhoto.click();
+  });
+
+  inputTakePhoto.addEventListener('change', e => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleFile(e.target.files[0]);
+    }
+  });
+
+  inputSelectPhoto.addEventListener('change', e => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleFile(e.target.files[0]);
+    }
+  });
+
+  function handleFile(file) {
+    message.textContent = "Chargement de l'image...";
+    const img = new Image();
+    img.onload = async () => {
+      // Ajustement du canvas à l’image
+      canvas.width = img.width;
+      canvas.height = img.height;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+
+      canvas.style.display = 'block';
+      message.textContent = "Analyse en cours...";
+
+      try {
+        const code = await decodeQRCodeFromCanvas(canvas);
+        message.textContent = "QR Code détecté : " + code;
+        // ici tu peux ajouter ta logique pour associer au médaillon
+      } catch (err) {
+        message.textContent = "❌ Aucun QR code détecté.";
+      }
+    };
+
+    img.onerror = () => {
+      message.textContent = "Erreur lors du chargement de l'image.";
+    };
+
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function decodeQRCodeFromCanvas(canvas) {
+    return new Promise((resolve, reject) => {
+      try {
+        const luminanceSource = new ZXing.HTMLCanvasElementLuminanceSource(canvas);
+        const binarizer = new ZXing.GlobalHistogramBinarizer(luminanceSource);
+        const binaryBitmap = new ZXing.BinaryBitmap(binarizer);
+        const reader = new ZXing.MultiFormatReader();
+        const result = reader.decode(binaryBitmap);
+        resolve(result.getText());
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+</script>
 
 </body>
 </html>
