@@ -2,34 +2,32 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <title>Scan QR - Manuel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Scan QR avec sélection manuelle</title>
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 1rem; }
-    canvas { border: 1px solid black; max-width: 100%; height: auto; }
+    body { text-align: center; font-family: sans-serif; }
+    canvas { border: 1px solid #000; margin-top: 10px; touch-action: none; }
     .point {
       width: 20px; height: 20px;
-      background-color: red; border-radius: 50%;
+      background: red; border-radius: 50%;
       position: absolute; margin: -10px 0 0 -10px;
       touch-action: none;
     }
     #container { position: relative; display: inline-block; }
-    #result { margin-top: 1rem; font-weight: bold; }
   </style>
 </head>
 <body>
 
-<h2>Scanner un QR Code manuellement</h2>
-
-<input type="file" accept="image/*" id="fileInput"><br><br>
+<h2>Scanner un QR Code</h2>
+<input type="file" id="fileInput" accept="image/*"><br><br>
 
 <div id="container">
   <canvas id="canvas"></canvas>
-  <div id="p0" class="point"></div>
-  <div id="p1" class="point"></div>
-  <div id="p2" class="point"></div>
-  <div id="p3" class="point"></div>
-</div><br>
+  <div class="point" id="p0"></div>
+  <div class="point" id="p1"></div>
+  <div class="point" id="p2"></div>
+  <div class="point" id="p3"></div>
+</div><br><br>
 
 <button id="scanBtn">🔍 Scanner</button>
 <p id="result">Résultat : -</p>
