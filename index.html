@@ -2,23 +2,43 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <title>Scan Médaillon</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CYW - Prototype</title>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+    #preview {
+      width: 100%;
+      max-width: 400px;
+      margin: 20px auto;
+      border: 2px solid #ccc;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #codeResult {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Scanner un médaillon</h1>
-  <video id="preview"></video>
+  <h1>CYW - Scanner de Médaillon</h1>
+
+  <div id="preview"></div>
+
   <button id="startScan">📷 Lancer le scan</button>
-  <p id="codeResult">Code scanné : <span></span></p>
+  <button id="resetScan">🔁 Relancer le scan</button>
 
-  <div id="result">
-    <h2 id="nomMedaillon"></h2>
-    <p id="typeMedaillon"></p>
-    <img id="imageMedaillon" src="" alt="Image du médaillon" />
-  </div>
+  <div id="codeResult">Code scanné : <span>-</span></div>
+  <div id="medaillonInfo"></div>
 
-  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <script src="script.js"></script>
 </body>
 </html>
