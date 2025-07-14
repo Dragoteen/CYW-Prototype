@@ -1,42 +1,47 @@
-const SHEET_URL = "https://api.sheety.co/d7cbcb1c41ac163fbaff577fe727b2bd/collectionYoKaiWatch [jp]Médaillons/medaillons";
+let html5QrCode;
 
-let database = [];
+async function startScanner() {
+  const previewElement = document.getElementById("preview");
 
-async function fetchDatabase() {
-  const res = await fetch(SHEET_URL);
-  database = await res.json();
-}
+  // Si une instance existe déjà, l'arrêter
+  if (html5QrCode) {
+    await html5QrCode.stop();
+    html5QrCode.clear();
+  }
 
-document.getElementById("startScan").addEventListener("click", async () => {
-  if (database.length === 0) await fetchDatabase();
+  html5QrCode = new Html5Qrcode("preview");
 
-  const html5QrCode = new Html5Qrcode("preview");
-
-  html5QrCode.start(
-    { facingMode: "environment" },
-    { fps: 10, qrbox: 250 },
-    (decodedText) => {
-      html5QrCode.stop();
-      document.querySelector("#codeResult span").textContent = decodedText;
-      showMedaillonInfo(decodedText);
-    },
-    (errorMessage) => {}
-  );
-});
-
-function showMedaillonInfo(code) {
-  const result = database.find(m => m.code === code);
-  const resultDiv = document.getElementById("result");
-
-  if (result) {
-    document.getElementById("nomMedaillon").textContent = result.nom;
-    document.getElementById("typeMedaillon").textContent = "Type : " + result.type;
-    document.getElementById("imageMedaillon").src = result.image;
-    resultDiv.style.display = "block";
-  } else {
-    document.getElementById("nomMedaillon").textContent = "Médaillon non trouvé.";
-    document.getElementById("typeMedaillon").textContent = "";
-    document.getElementById("imageMedaillon").src = "";
-    resultDiv.style.display = "block";
+  try {
+    await html5QrCode.start(
+      { facingMode: "environment" },
+      {
+        fps: 10,
+        qrbox: 250,
+        experimentalFeatures: {
+          useBarCodeDetectorIfSupported: true
+        }
+      },
+      (decodedText) => {
+        html5QrCode.stop();
+        document.querySelector("#codeResult span").textContent = decodedText;
+        showMedaillonInfo(decodedText);
+      },
+      (errorMessage) => {
+        // On ignore les erreurs momentanées de scan
+      }
+    );
+  } catch (err) {
+    console.error("Erreur lors du démarrage du scanner :", err);
   }
 }
+
+function showMedaillonInfo(code) {
+  // Pour l’instant, juste un exemple de sortie
+  document.getElementById("medaillonInfo").innerHTML = `
+    <p><strong>Médaillon trouvé :</strong> ${code}</p>
+    <!-- Ici tu peux ajouter une requête vers Google Sheets ou une base de données -->
+  `;
+}
+
+document.getElementById("startScan").addEventListener("click", startScanner);
+document.getElementById("resetScan").addEventListener("click", startScanner);
